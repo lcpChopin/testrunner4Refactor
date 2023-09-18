@@ -3,6 +3,7 @@ package edu.illinois.cs.testrunner.runner
 import java.io.File
 import java.nio.file.{Files, Path, Paths, StandardCopyOption}
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 import com.google.gson.Gson
 import edu.illinois.cs.testrunner.configuration.{ConfigProps, Configuration}
@@ -72,7 +73,7 @@ trait Runner {
                     path.toAbsolutePath.toString,
                     propertiesPath.toAbsolutePath.toString,
                     outputPath.toAbsolutePath.toString)
-            proc.waitFor()
+            proc.waitFor(300, TimeUnit.SECONDS)
             val exitCode = proc.exitValue()
             if (exitCode == 0) {
                 autoClose(Source.fromFile(outputPath.toAbsolutePath.toString).bufferedReader())(reader =>
