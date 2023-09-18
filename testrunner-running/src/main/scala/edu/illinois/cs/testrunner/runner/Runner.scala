@@ -66,13 +66,14 @@ trait Runner {
 
             val testRunId = generateTestRunId()
 
-            val exitCode = info.run(
+            val proc = info.run(
                     testRunId,
                     framework().toString,
                     path.toAbsolutePath.toString,
                     propertiesPath.toAbsolutePath.toString,
-                    outputPath.toAbsolutePath.toString).exitValue()
-
+                    outputPath.toAbsolutePath.toString)
+            proc.waitFor()
+            val exitCode = proc.exitValue()
             if (exitCode == 0) {
                 autoClose(Source.fromFile(outputPath.toAbsolutePath.toString).bufferedReader())(reader =>
                     Try(new Gson().fromJson(reader, classOf[TestRunResult])))
